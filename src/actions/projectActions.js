@@ -33,6 +33,7 @@ function deleteProject(id){
 
 function addProjectWithColumns(projectData){
     const projectId = Date.now();
+    const backlogColumnId = projectId + 1;
     
     return{
         type: ADD_PROJECT_WITH_COLUMNS,
@@ -44,7 +45,7 @@ function addProjectWithColumns(projectData){
             },
             columns: [
                 {
-                    id: projectId + 1,
+                    id: backlogColumnId,
                     projectId: projectId,
                     name: 'Backlog',
                     order: 0
@@ -67,7 +68,15 @@ function addProjectWithColumns(projectData){
                     name: 'Done',
                     order: 3
                 }
-            ]
+            ],
+            task: {
+                id: projectId + 5,
+                projectId: projectId,
+                columnId: backlogColumnId,
+                title: 'Sample Task',
+                description: 'This is your first task. Click to edit or delete it.',
+                completed: false
+            }
         }
     }
 }
