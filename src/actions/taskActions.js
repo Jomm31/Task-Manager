@@ -2,11 +2,13 @@ const ADD_TASK = 'ADD_TASK';
 const UPDATE_TASK = 'UPDATE_TASK';
 const DELETE_TASK = 'DELETE_TASK';
 
-function addTask(taskData){
+function addTask(taskData, projectId, columnId){
     return{
         type: ADD_TASK,
         payload: {
             id: Date.now(),
+            projectId,
+            columnId,
             ...taskData,
             completed: false
         }
