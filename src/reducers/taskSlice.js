@@ -1,6 +1,7 @@
-//redux toolkit (rtk) for reducer and action in one, and
-//async thunk for adding tasks
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+//redux toolkit (rtk) for reducer and action in one,
+//async thunk for adding tasks and 
+//Normalized State
+import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import { taskAPI } from '../api/taskApi';
 
 export const addTaskAsync = createAsyncThunk('tasks/addTask', async (taskData) => {
@@ -8,34 +9,26 @@ export const addTaskAsync = createAsyncThunk('tasks/addTask', async (taskData) =
 
 });
 
+const tasksAdapter = createEntityAdapter({
+  selectId: (task) => task.id,
+  sortComparer: (a, b) => a.id - b.id
+});
+
 const taskSlice = createSlice({
   name: 'tasks',
-  initialState: {
-    items: [],
+  initialState: tasksAdapter.getInitialState({
     loading: false,
     error: null
-  },
+  }),
   reducers: {
-    addTask: (state, action) => {
-      state.items.push(action.payload);
-    },
-
-    updateTask: (state, action) => {
-      const task = state.items.find(t => t.id === action.payload.id)
-      if(task){
-        Object.assign(task, action.payload);
-      }
-    },
-
-    deleteTask: (state, action) => {
-      state.items = state.items.filter(task => task.id !== action.payload)
-    }
-      
+    addTask: tasksAdapter.addOne,
+    updateTask: tasksAdapter.updateOne,
+    deleteTask: tasksAdapter.removeOne
   },
   extraReducers: (builder) => {
     builder.addCase('ADD_PROJECT_WITH_COLUMNS', (state, action) => {
       if (action.payload.task) {
-        state.items.push(action.payload.task);
+        tasksAdapter.addOne(state, action.payload.task);
       }
     });
 
@@ -45,9 +38,8 @@ const taskSlice = createSlice({
     });
     
     builder.addCase(addTaskAsync.fulfilled, (state, action) => {
-      state.loading = false
-      state.items.push(action.payload);
-    
+      state.loading = false;
+      tasksAdapter.addOne(state, action.payload);
     });
 
     builder.addCase(addTaskAsync.rejected, (state, action) => {
@@ -60,3 +52,10 @@ const taskSlice = createSlice({
 
 export const { addTask, updateTask, deleteTask } = taskSlice.actions;
 export default taskSlice.reducer;
+
+// Auto-generated selectors from entity adapter
+export const {
+  selectAll: selectAllTasks,
+  selectById: selectTaskById,
+  selectIds: selectTaskIds
+} = tasksAdapter.getSelectors(state => state.tasks);
