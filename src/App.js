@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addProjectWithColumns, updateProject, deleteProject, reorderProjects } from './actions/projectActions';
+import { selectAllTasks } from './selectors/taskSelectors';
 import Sidebar from './components/sidebar/Sidebar.js';
 import KanbanBoard from './components/board/KanbanBoard.js';
 import ProjectModal from './components/sidebar/ProjectModal';
+import CalendarView from './components/calendar/CalendarView';
+import SearchBar from './components/common/SearchBar';
+import TaskModal from './components/board/TaskModal';
+import { updateTask, deleteTask } from './reducers/taskSlice';
 
 function App() {
   const dispatch = useDispatch();
   const projects = useSelector(state => state.projects);
+  const allTasks = useSelector(selectAllTasks);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
+  const [currentView, setCurrentView] = useState('board'); // 'board' or 'calendar'
+  const [selectedTaskFromSearch, setSelectedTaskFromSearch] = useState(null);
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
     return saved ? JSON.parse(saved) : false;
@@ -66,9 +74,36 @@ function App() {
   // Close sidebar on mobile when selecting project
   const handleSelectProject = (id) => {
     setSelectedProjectId(id);
+    setCurrentView('board'); // Switch to board view when selecting a project
     if (window.innerWidth < 768) {
       setSidebarOpen(false);
     }
+  };
+
+  // Handle search result clicks
+  const handleSearchSelectTask = (task) => {
+    setSelectedProjectId(task.projectId);
+    setCurrentView('board');
+    setSelectedTaskFromSearch(task);
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+  };
+
+  const handleCalendarTaskClick = (task) => {
+    setSelectedProjectId(task.projectId);
+    setCurrentView('board');
+    setSelectedTaskFromSearch(task);
+  };
+
+  const handleUpdateTaskFromModal = (updatedTask) => {
+    dispatch(updateTask({ id: updatedTask.id, changes: updatedTask }));
+    setSelectedTaskFromSearch(null);
+  };
+
+  const handleDeleteTaskFromModal = (taskId) => {
+    dispatch(deleteTask(taskId));
+    setSelectedTaskFromSearch(null);
   };
 
   return (
@@ -86,7 +121,45 @@ function App() {
           <span className="text-white text-lg font-bold hidden sm:block">Task Manager</span>
           <span className="text-white text-lg font-bold sm:hidden">TM</span>
         </div>
-        <div className="flex items-center gap-4">
+        
+        {/* Center - Search Bar */}
+        <div className="flex-1 flex justify-center px-4">
+          <SearchBar
+            projects={projects}
+            tasks={allTasks}
+            onSelectProject={handleSelectProject}
+            onSelectTask={handleSearchSelectTask}
+            darkMode={darkMode}
+          />
+        </div>
+        
+        <div className="flex items-center gap-2">
+          {/* View Toggle */}
+          <div className={`flex rounded-lg overflow-hidden ${darkMode ? 'bg-gray-700' : 'bg-gray-700'}`}>
+            <button
+              onClick={() => setCurrentView('board')}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${
+                currentView === 'board'
+                  ? 'bg-blue-500 text-white'
+                  : 'text-gray-300 hover:text-white hover:bg-gray-600'
+              }`}
+              title="Board View"
+            >
+              📋 <span className="hidden sm:inline">Board</span>
+            </button>
+            <button
+              onClick={() => setCurrentView('calendar')}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${
+                currentView === 'calendar'
+                  ? 'bg-blue-500 text-white'
+                  : 'text-gray-300 hover:text-white hover:bg-gray-600'
+              }`}
+              title="Calendar View"
+            >
+              📅 <span className="hidden sm:inline">Calendar</span>
+            </button>
+          </div>
+          
           {/* Theme Toggle */}
           <button
             className={`p-2 rounded-lg transition-colors ${darkMode ? 'bg-yellow-500 text-gray-900 hover:bg-yellow-400' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
@@ -125,7 +198,14 @@ function App() {
 
         {/* Main Content */}
         <main className={`flex-1 overflow-auto transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : ''} ${darkMode ? 'bg-gray-900' : 'bg-gray-100'} p-4 md:p-6`}>
-          {selectedProjectId ? (
+          {currentView === 'calendar' ? (
+            <CalendarView
+              tasks={allTasks}
+              projects={projects}
+              onTaskClick={handleCalendarTaskClick}
+              darkMode={darkMode}
+            />
+          ) : selectedProjectId ? (
             <KanbanBoard projectId={selectedProjectId} darkMode={darkMode} />
           ) : (
             <div className="flex items-center justify-center h-full">
@@ -142,6 +222,17 @@ function App() {
           onChange={setNewProjectName}
           onAdd={handleAddProject}
           onCancel={() => { setShowProjectModal(false); setNewProjectName(''); }}
+          darkMode={darkMode}
+        />
+      )}
+
+      {/* Task Modal from Search/Calendar */}
+      {selectedTaskFromSearch && (
+        <TaskModal
+          task={selectedTaskFromSearch}
+          onClose={() => setSelectedTaskFromSearch(null)}
+          onSave={handleUpdateTaskFromModal}
+          onDelete={handleDeleteTaskFromModal}
           darkMode={darkMode}
         />
       )}
