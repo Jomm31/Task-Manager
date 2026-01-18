@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addProjectWithColumns } from './actions/projectActions';
+import { addProjectWithColumns, updateProject, deleteProject, reorderProjects } from './actions/projectActions';
 import Sidebar from './components/sidebar/Sidebar.js';
 import KanbanBoard from './components/board/KanbanBoard.js';
 import ProjectModal from './components/sidebar/ProjectModal';
@@ -12,6 +12,20 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  // Persist dark mode
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   useEffect(() => {
     if (projects.length === 0) {
@@ -33,50 +47,102 @@ function App() {
     }
   };
 
+  const handleUpdateProject = (id, name) => {
+    dispatch(updateProject(id, { name }));
+  };
+
+  const handleDeleteProject = (id) => {
+    dispatch(deleteProject(id));
+    if (selectedProjectId === id) {
+      const remaining = projects.filter(p => p.id !== id);
+      setSelectedProjectId(remaining.length > 0 ? remaining[0].id : null);
+    }
+  };
+
+  const handleReorderProjects = (projectIds) => {
+    dispatch(reorderProjects(projectIds));
+  };
+
+  // Close sidebar on mobile when selecting project
+  const handleSelectProject = (id) => {
+    setSelectedProjectId(id);
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+  };
+
   return (
-    <div className="flex h-screen">
-      {/* Header with burger icon */}
-      <div className="absolute top-0 left-0 w-full h-14 bg-slate-900 flex items-center px-4 z-20">
-        <button
-          className="text-white text-2xl mr-4 focus:outline-none"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          aria-label={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
-        >
-          {/* Burger icon */}
-          <span className="inline-block align-middle">
-            &#9776;
-          </span>
-        </button>
-        <span className="text-white text-lg font-bold">Task Manager</span>
-      </div>
-      {/* Sidebar - slides in/out */}
-      <div
-        className={`fixed top-14 left-0 h-[calc(100vh-3.5rem)] z-10 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-64`}
-      >
-        <Sidebar
-          projects={projects}
-          selectedProjectId={selectedProjectId}
-          onSelectProject={setSelectedProjectId}
-          onShowProjectModal={() => setShowProjectModal(true)}
-        />
-      </div>
-      {/* Main content area, with left margin if sidebar is open */}
-      <div className={`flex-1 bg-gray-100 p-5 overflow-auto transition-all duration-300 ${sidebarOpen ? 'ml-64' : ''}`}>
-        {selectedProjectId ? (
-          <KanbanBoard projectId={selectedProjectId} />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-gray-500 text-xl">Select a project to view tasks</p>
-          </div>
+    <div className={`flex flex-col h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
+      {/* Header */}
+      <header className={`fixed top-0 left-0 w-full h-14 ${darkMode ? 'bg-gray-800' : 'bg-slate-900'} flex items-center justify-between px-4 z-30`}>
+        <div className="flex items-center">
+          <button
+            className="text-white text-2xl mr-4 focus:outline-none hover:bg-slate-700 p-2 rounded-lg transition-colors"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
+          >
+            <span className="inline-block align-middle">&#9776;</span>
+          </button>
+          <span className="text-white text-lg font-bold hidden sm:block">Task Manager</span>
+          <span className="text-white text-lg font-bold sm:hidden">TM</span>
+        </div>
+        <div className="flex items-center gap-4">
+          {/* Theme Toggle */}
+          <button
+            className={`p-2 rounded-lg transition-colors ${darkMode ? 'bg-yellow-500 text-gray-900 hover:bg-yellow-400' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
+            onClick={() => setDarkMode(!darkMode)}
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
+      </header>
+
+      <div className="flex flex-1 pt-14">
+        {/* Sidebar Overlay for mobile */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-10 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
         )}
+
+        {/* Sidebar */}
+        <aside
+          className={`fixed top-14 left-0 h-[calc(100vh-3.5rem)] z-20 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-64 md:w-64`}
+        >
+          <Sidebar
+            projects={[...projects].sort((a, b) => a.order - b.order)}
+            selectedProjectId={selectedProjectId}
+            onSelectProject={handleSelectProject}
+            onShowProjectModal={() => setShowProjectModal(true)}
+            onUpdateProject={handleUpdateProject}
+            onDeleteProject={handleDeleteProject}
+            onReorderProjects={handleReorderProjects}
+            darkMode={darkMode}
+          />
+        </aside>
+
+        {/* Main Content */}
+        <main className={`flex-1 overflow-auto transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : ''} ${darkMode ? 'bg-gray-900' : 'bg-gray-100'} p-4 md:p-6`}>
+          {selectedProjectId ? (
+            <KanbanBoard projectId={selectedProjectId} darkMode={darkMode} />
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className={`text-xl ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Select a project to view tasks</p>
+            </div>
+          )}
+        </main>
       </div>
-      {/* Project Modal rendered at app level for true centering */}
+
+      {/* Project Modal */}
       {showProjectModal && (
         <ProjectModal
           value={newProjectName}
           onChange={setNewProjectName}
           onAdd={handleAddProject}
           onCancel={() => { setShowProjectModal(false); setNewProjectName(''); }}
+          darkMode={darkMode}
         />
       )}
     </div>

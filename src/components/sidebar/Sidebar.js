@@ -1,34 +1,74 @@
 import React from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import ProjectItem from './ProjectItem';
 
-function Sidebar({ projects, selectedProjectId, onSelectProject, onShowProjectModal }) {
-  // Sidebar content
-  const sidebarContent = (
-    <div className="h-full w-64 bg-slate-800 text-white p-5 flex flex-col">
-      <div className="flex items-center mb-2">
-        <h2 className="text-xl font-bold flex-1">Projects <span className="text-xs text-slate-400">({projects.length})</span></h2>
+function Sidebar({ projects, selectedProjectId, onSelectProject, onShowProjectModal, onUpdateProject, onDeleteProject, onReorderProjects, darkMode }) {
+  
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    if (result.destination.index === result.source.index) return;
+    
+    const reordered = Array.from(projects);
+    const [removed] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, removed);
+    
+    // Send just the IDs in new order
+    onReorderProjects(reordered.map(p => p.id));
+  };
+
+  return (
+    <div className={`h-full w-64 ${darkMode ? 'bg-gray-800 text-gray-100' : 'bg-slate-800 text-white'} p-4 flex flex-col`}>
+      <div className="flex items-center mb-3">
+        <h2 className="text-lg font-bold flex-1">
+          Projects <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-slate-400'}`}>({projects.length})</span>
+        </h2>
         <button
-          className="ml-2 text-white bg-blue-500 hover:bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-xl"
+          className="text-white bg-blue-500 hover:bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-xl transition-colors"
           title="Add Project"
           onClick={onShowProjectModal}
-        >+
-        </button>
+        >+</button>
       </div>
-      <div className="border-b border-slate-700 mb-4"></div>
-      <div className="flex-1 overflow-y-auto">
-        {projects.map(project => (
-          <ProjectItem
-            key={project.id}
-            project={project}
-            isSelected={selectedProjectId === project.id}
-            onSelect={() => onSelectProject(project.id)}
-          />
-        ))}
-      </div>
+      <div className={`border-b ${darkMode ? 'border-gray-700' : 'border-slate-700'} mb-3`}></div>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="projects">
+          {(provided) => (
+            <div 
+              className="flex-1 overflow-y-auto"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {projects.length === 0 ? (
+                <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-slate-400'}`}>No projects yet</p>
+              ) : (
+                projects.map((project, index) => (
+                  <Draggable key={project.id} draggableId={String(project.id)} index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <ProjectItem
+                          project={project}
+                          isSelected={selectedProjectId === project.id}
+                          onSelect={() => onSelectProject(project.id)}
+                          onUpdate={(name) => onUpdateProject(project.id, name)}
+                          onDelete={() => onDeleteProject(project.id)}
+                          darkMode={darkMode}
+                          isDragging={snapshot.isDragging}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))
+              )}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
-
-  return sidebarContent;
 }
 
 export default Sidebar;
