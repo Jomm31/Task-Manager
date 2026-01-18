@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addProjectWithColumns } from './actions/projectActions';
-import './App.css';
+import Sidebar from './components/sidebar/Sidebar.js'
+import KanbanBoard from './components/board/KanbanBoard.js'
 
 function App() {
   const dispatch = useDispatch();
@@ -27,35 +28,21 @@ function App() {
   }, [projects]);
 
   return (
-    <div className="app">
-      {/* Sidebar - Left side */}
-      <div className="sidebar">
-        <h2>Projects</h2>
-        <div className="project-list">
-          {projects.map(project => (
-            <div
-              key={project.id}
-              className={`project-item ${selectedProjectId === project.id ? 'active' : ''}`}
-              onClick={() => setSelectedProjectId(project.id)}
-            >
-              {project.name}
-            </div>
-          ))}
-        </div>
-        <button className="add-project-btn">+ New Project</button>
-      </div>
+    <div className= 'flex h-screen'>
+      <Sidebar
+        projects = {projects}
+        selectedProjectId = {selectedProjectId}
+        onSelectProject = {setSelectedProjectId}  
+      />
 
-      {/* Main Content - Right side */}
-      <div className="main-content">
+      <div className="flex-1 bg-gray-100 p-5 overflow-auto">
         {selectedProjectId ? (
-          <div className="kanban-board">
-            <h1>Kanban Board (Project {selectedProjectId})</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-5">Kanban Board</h1>
             <p>Board will go here...</p>
           </div>
         ) : (
-          <div className="empty-state">
-            <p>Select a project to view tasks</p>
-          </div>
+          <p className= "text-gray-500">Select a project</p>
         )}
       </div>
     </div>
