@@ -1,0 +1,30 @@
+import { createSelector } from 'reselect';
+
+//basic selectors
+//input selector
+export const selectTasksState = (state) => state.tasks;
+
+//get items array
+export const selectAllTasks = (state) => state.tasks.items;
+
+//get loading state
+export const selectTasksLoading = (state) => state.tasks.loading;
+
+//get error state
+export const selectTaskError = (state) => state.tasks.error;
+
+
+//memorized selectors
+
+//get tasks for specific project - only recalculates when tasks change
+
+export const selectTasksByProject = createSelector(
+    [selectAllTasks, (state, projectId) => projectId],
+    (tasks, projectId) => tasks.filter(task => task.projectId === projectId)
+);
+
+//get completed tasks count
+export const selectCompletedTasksCount = createSelector(
+    [selectAllTasks],
+    (tasks) => tasks.filter(task => task.completed).length
+);
