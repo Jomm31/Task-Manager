@@ -23,6 +23,15 @@ export const selectTasksByProject = createSelector(
     (tasks, projectId) => tasks.filter(task => task.projectId === projectId)
 );
 
+// Get tasks for a specific column (sorted by order) - for kanban board
+export const selectTasksByColumn = createSelector(
+    [selectAllTasks, (state, columnId) => columnId],
+    (tasks, columnId) => 
+        tasks
+            .filter(task => task.columnId === columnId)
+            .sort((a, b) => a.order - b.order)
+);
+
 //get completed tasks count
 export const selectCompletedTasksCount = createSelector(
     [selectAllTasks],

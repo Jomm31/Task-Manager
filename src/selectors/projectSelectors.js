@@ -8,6 +8,12 @@ export const selectAllProjects = (state) => state.projects;
 
 // ========== MEMOIZED SELECTORS ==========
 
+// Get all projects sorted by order (for sidebar display)
+export const selectProjectsSorted = createSelector(
+    [selectAllProjects],
+    (projects) => [...projects].sort((a, b) => a.order - b.order)
+);
+
 // Get project by ID
 export const selectProjectById = createSelector(
     [selectAllProjects, (state, projectId) => projectId],

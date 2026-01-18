@@ -2,6 +2,7 @@ const ADD_PROJECT = 'ADD_PROJECT';
 const UPDATE_PROJECT = 'UPDATE_PROJECT';
 const DELETE_PROJECT = 'DELETE_PROJECT';
 const ADD_PROJECT_WITH_COLUMNS = 'ADD_PROJECT_WITH_COLUMNS';
+const REORDER_PROJECTS = 'REORDER_PROJECTS';
 
 function addProject(projectData){
     return{
@@ -9,6 +10,7 @@ function addProject(projectData){
         payload: {
             id: Date.now(),
             ...projectData,
+            order: Date.now(), // for sorting
             completed: false
         }
     }
@@ -41,6 +43,7 @@ function addProjectWithColumns(projectData){
             project: {
                 id: projectId,
                 ...projectData,
+                order: projectId, // for drag & drop sorting
                 completed: false
             },
             columns: [
@@ -75,11 +78,20 @@ function addProjectWithColumns(projectData){
                 columnId: backlogColumnId,
                 title: 'Sample Task',
                 description: 'This is your first task. Click to edit or delete it.',
+                dueDate: null, // for deadline display
+                order: 0, // for drag & drop sorting within column
                 completed: false
             }
         }
     }
 }
 
+// Reorder projects (for drag & drop in sidebar)
+function reorderProjects(projectIds){
+    return {
+        type: REORDER_PROJECTS,
+        payload: projectIds // array of project IDs in new order
+    }
+}
 
-export {addProject, updateProject, deleteProject, addProjectWithColumns};
+export {addProject, updateProject, deleteProject, addProjectWithColumns, reorderProjects};
