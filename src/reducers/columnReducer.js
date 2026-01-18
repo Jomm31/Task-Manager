@@ -2,6 +2,7 @@ const ADD_COLUMN = 'ADD_COLUMN';
 const UPDATE_COLUMN = 'UPDATE_COLUMN';
 const DELETE_COLUMN = 'DELETE_COLUMN';
 const ADD_PROJECT_WITH_COLUMNS = 'ADD_PROJECT_WITH_COLUMNS';
+const REORDER_COLUMNS = 'REORDER_COLUMNS';
 
 const initialState = [];
 
@@ -22,6 +23,16 @@ function columnReducer(state = initialState, action){
         
         case ADD_PROJECT_WITH_COLUMNS:
             return [...state, ...action.payload.columns];
+        
+        case REORDER_COLUMNS:
+            // Update order for columns in the specified project
+            return state.map(column => {
+                if (column.projectId === action.payload.projectId) {
+                    const newOrder = action.payload.columnIds.indexOf(column.id);
+                    return newOrder !== -1 ? { ...column, order: newOrder } : column;
+                }
+                return column;
+            });
             
         default:
             return state;
