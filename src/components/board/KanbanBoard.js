@@ -8,6 +8,7 @@ import { addTask, updateTask, deleteTask } from '../../reducers/taskSlice';
 import TaskCard from './TaskCard';
 import TaskModal from './TaskModal';
 
+
 function KanbanBoard({ projectId, darkMode }) {
   const dispatch = useDispatch();
   const columns = useSelector(state => selectColumnsByProject(state, projectId));
@@ -19,6 +20,21 @@ function KanbanBoard({ projectId, darkMode }) {
   const [editedColumnName, setEditedColumnName] = useState('');
   const [addingTaskColumnId, setAddingTaskColumnId] = useState(null);
   const [newTaskTitle, setNewTaskTitle] = useState('');
+  // State for 3-dots menu and submenu
+  const [menuOpenColumnId, setMenuOpenColumnId] = useState(null);
+  const [addSectionHover, setAddSectionHover] = useState(null);
+  // State for delete modal
+  const [deleteModal, setDeleteModal] = useState({ open: false, column: null, completed: 0, incomplete: 0, tasks: [] });
+
+  // Add section handler
+  const handleAddSection = (columnIndex, direction) => {
+    const newName = window.prompt('Section name:');
+    if (!newName || !newName.trim()) return;
+    const insertIndex = direction === 'left' ? columnIndex : columnIndex + 1;
+    dispatch(addColumn(projectId, newName.trim(), insertIndex));
+    setMenuOpenColumnId(null);
+    setAddSectionHover(null);
+  };
 
   const handleDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
@@ -98,9 +114,40 @@ function KanbanBoard({ projectId, darkMode }) {
   };
 
   const handleDeleteColumn = (columnId) => {
-    if (window.confirm('Delete this column and all its tasks?')) {
+    const column = columns.find(c => c.id === columnId);
+    const tasks = allTasks.filter(t => t.columnId === columnId);
+    if (tasks.length === 0) {
       dispatch(deleteColumn(columnId));
+      return;
     }
+    const completed = tasks.filter(t => t.completed).length;
+    const incomplete = tasks.length - completed;
+    setDeleteModal({ open: true, column, completed, incomplete, tasks });
+  };
+
+  // Actually delete column and keep tasks (move to backlog)
+  const handleDeleteColumnKeepTasks = () => {
+    if (!deleteModal.column) return;
+    // Find backlog column (assume first column is backlog)
+    const backlog = columns[0];
+    if (!backlog) return;
+    // Move all tasks to backlog
+    deleteModal.tasks.forEach((task, idx) => {
+      dispatch(updateTask({ id: task.id, changes: { columnId: backlog.id, order: idx } }));
+    });
+    dispatch(deleteColumn(deleteModal.column.id));
+    setDeleteModal({ open: false, column: null, completed: 0, incomplete: 0, tasks: [] });
+  };
+
+  // Actually delete column and delete tasks
+  const handleDeleteColumnAndTasks = () => {
+    if (!deleteModal.column) return;
+    // Delete all tasks in this column
+    deleteModal.tasks.forEach(task => {
+      dispatch(deleteTask(task.id));
+    });
+    dispatch(deleteColumn(deleteModal.column.id));
+    setDeleteModal({ open: false, column: null, completed: 0, incomplete: 0, tasks: [] });
   };
 
   const handleAddTask = (columnId) => {
@@ -154,7 +201,7 @@ function KanbanBoard({ projectId, darkMode }) {
                     >
                       {/* Column Header - this is the drag handle */}
                       <div 
-                        className="flex items-center mb-3 cursor-grab active:cursor-grabbing"
+                        className="flex items-center mb-3 cursor-grab active:cursor-grabbing group relative"
                         {...provided.dragHandleProps}
                       >
                         {editingColumnId === column.id ? (
@@ -176,11 +223,60 @@ function KanbanBoard({ projectId, darkMode }) {
                             {column.name} <span className={`text-xs font-normal ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>({tasks.length})</span>
                           </h3>
                         )}
-                        <button
-                          className="ml-2 text-red-400 hover:text-red-500 text-lg transition-colors"
-                          onClick={() => handleDeleteColumn(column.id)}
-                          title="Delete column"
-                        >🗑️</button>
+                        {/* 3-dots menu button, only visible on hover */}
+                        <div className="relative ml-2">
+                          <button
+                            className={`opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-300'}`}
+                            onClick={e => {
+                              e.stopPropagation();
+                              setMenuOpenColumnId(column.id === menuOpenColumnId ? null : column.id);
+                            }}
+                            title="Column options"
+                          >
+                            <span style={{fontSize: '1.5em', lineHeight: 1, color: '#fff'}}>⋯</span>
+                          </button>
+                          {/* Dropdown menu */}
+                          {menuOpenColumnId === column.id && (
+                            <div className={`absolute right-0 z-10 mt-2 w-44 rounded shadow-lg ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+                                 onClick={e => e.stopPropagation()}>
+                              <button
+                                className="w-full text-left px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700"
+                                onClick={() => {
+                                  setEditingColumnId(column.id);
+                                  setEditedColumnName(column.name);
+                                  setMenuOpenColumnId(null);
+                                }}
+                              >Rename column</button>
+                              <button
+                                className="w-full text-left px-4 py-2 hover:bg-red-100 dark:hover:bg-gray-700"
+                                onClick={() => { handleDeleteColumn(column.id); setMenuOpenColumnId(null); }}
+                              >Delete column</button>
+                              <div className="border-t my-1 border-gray-300 dark:border-gray-600"></div>
+                              <div className="group/add-section relative">
+                                <button
+                                  className="w-full text-left px-4 py-2 hover:bg-green-100 dark:hover:bg-gray-700"
+                                  onMouseEnter={() => setAddSectionHover(column.id)}
+                                  onMouseLeave={() => setAddSectionHover(null)}
+                                >Add section</button>
+                                {/* Add section submenu */}
+                                {addSectionHover === column.id && (
+                                  <div className={`absolute left-full top-0 ml-1 w-48 rounded shadow-lg ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+                                       onMouseEnter={() => setAddSectionHover(column.id)}
+                                       onMouseLeave={() => setAddSectionHover(null)}>
+                                    <button
+                                      className="w-full text-left px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700"
+                                      onClick={() => handleAddSection(columnIndex, 'left')}
+                                    >Add section to left</button>
+                                    <button
+                                      className="w-full text-left px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700"
+                                      onClick={() => handleAddSection(columnIndex, 'right')}
+                                    >Add section to right</button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {/* Tasks List */}
@@ -300,6 +396,69 @@ function KanbanBoard({ projectId, darkMode }) {
           onDelete={handleDeleteTask}
           darkMode={darkMode}
         />
+      )}
+
+      {/* Delete Modal */}
+      {deleteModal.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md`}>
+            <h2 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">Are you sure you want to delete this section?</h2>
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              This section <span className="font-semibold">{deleteModal.column?.name}</span> includes
+              {deleteModal.completed > 0 && (
+                <> <span className="font-semibold">{deleteModal.completed}</span> completed task{deleteModal.completed > 1 ? 's' : ''}</>
+              )}
+              {deleteModal.completed > 0 && deleteModal.incomplete > 0 && ' and'}
+              {deleteModal.incomplete > 0 && (
+                <> <span className="font-semibold">{deleteModal.incomplete}</span> incomplete task{deleteModal.incomplete > 1 ? 's' : ''}</>
+              )}.
+            </p>
+            <div className="flex flex-col gap-2 mb-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="deleteOption"
+                  checked={deleteModal.deleteOption !== 'delete'}
+                  onChange={() => setDeleteModal({ ...deleteModal, deleteOption: 'keep' })}
+                />
+                <span className="text-gray-800 dark:text-gray-100">
+                  Delete this section and keep these {deleteModal.incomplete} task{deleteModal.incomplete > 1 ? 's' : ''}
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="deleteOption"
+                  checked={deleteModal.deleteOption === 'delete'}
+                  onChange={() => setDeleteModal({ ...deleteModal, deleteOption: 'delete' })}
+                />
+                <span className="text-gray-800 dark:text-gray-100">
+                  Delete this section and delete these {deleteModal.tasks.length} task{deleteModal.tasks.length !== 1 ? 's' : ''}
+                </span>
+              </label>
+            </div>
+            <div className="flex gap-2">
+              <button
+                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 px-4 py-2 rounded"
+                onClick={() => setDeleteModal({ open: false, column: null, completed: 0, incomplete: 0, tasks: [] })}
+              >
+                Cancel
+              </button>
+              <button
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                onClick={() => {
+                  if (deleteModal.deleteOption === 'delete') {
+                    handleDeleteColumnAndTasks();
+                  } else {
+                    handleDeleteColumnKeepTasks();
+                  }
+                }}
+              >
+                Delete Section
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </DragDropContext>
   );
