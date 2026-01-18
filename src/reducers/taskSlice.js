@@ -1,9 +1,14 @@
-//redux toolkit (rtk)
-import { createSlice } from '@reduxjs/toolkit';
+//redux toolkit (rtk) for reducer and action in one, and
+//async thunk for adding tasks
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const taskSlice = createSlice({
   name: 'tasks',
-  initialState: [],
+  initialState: {
+    items: [],
+    loading: false,
+    error: null
+  },
   reducers: {
     addTask: (state, action) => {
       state.push(action.payload);
