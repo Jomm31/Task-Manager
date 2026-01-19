@@ -3,11 +3,11 @@ const UPDATE_COLUMN = 'UPDATE_COLUMN';
 const DELETE_COLUMN = 'DELETE_COLUMN';
 const REORDER_COLUMNS = 'REORDER_COLUMNS';
 
-function addColumn(projectId, columnName, order = 0){
+function addColumn(projectId, columnName, order = 0, customId = null){
     return {
         type: ADD_COLUMN,
         payload: {
-            id: Date.now(),
+            id: customId || Date.now(),
             projectId,
             name: columnName,
             order

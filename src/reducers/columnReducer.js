@@ -8,8 +8,17 @@ const initialState = [];
 
 function columnReducer(state = initialState, action){
     switch(action.type){
-        case ADD_COLUMN:
-            return [...state, action.payload];
+        case ADD_COLUMN: {
+            const { projectId, order } = action.payload;
+            // Update order for existing columns in the same project that are at or after the insert position
+            const updatedState = state.map(column => {
+                if (column.projectId === projectId && column.order >= order) {
+                    return { ...column, order: column.order + 1 };
+                }
+                return column;
+            });
+            return [...updatedState, action.payload];
+        }
         
         case UPDATE_COLUMN:
             return state.map(column =>

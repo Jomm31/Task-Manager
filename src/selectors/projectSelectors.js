@@ -5,14 +5,8 @@ import { createSelector } from 'reselect';
 
 // Get all projects (it's already an array)
 export const selectAllProjects = (state) => state.projects;
-
+s
 // ========== MEMOIZED SELECTORS ==========
-
-// Get all projects sorted by order (for sidebar display)
-export const selectProjectsSorted = createSelector(
-    [selectAllProjects],
-    (projects) => [...projects].sort((a, b) => a.order - b.order)
-);
 
 // Get project by ID
 export const selectProjectById = createSelector(

@@ -28,12 +28,15 @@ function KanbanBoard({ projectId, darkMode }) {
 
   // Add section handler
   const handleAddSection = (columnIndex, direction) => {
-    const newName = window.prompt('Section name:');
-    if (!newName || !newName.trim()) return;
-    const insertIndex = direction === 'left' ? columnIndex : columnIndex + 1;
-    dispatch(addColumn(projectId, newName.trim(), insertIndex));
+    const column = columns[columnIndex];
+    const insertOrder = direction === 'left' ? column.order : column.order + 1;
+    const newColumnId = Date.now();
+    dispatch(addColumn(projectId, 'Untitled Section', insertOrder, newColumnId));
     setMenuOpenColumnId(null);
     setAddSectionHover(null);
+    // Automatically open edit mode for the new section
+    setEditingColumnId(newColumnId);
+    setEditedColumnName('');
   };
 
   const handleDragEnd = (result) => {
@@ -106,11 +109,10 @@ function KanbanBoard({ projectId, darkMode }) {
   };
 
   const handleSaveColumn = (columnId) => {
-    if (editedColumnName.trim()) {
-      dispatch(updateColumn(columnId, { name: editedColumnName }));
-      setEditingColumnId(null);
-      setEditedColumnName('');
-    }
+    const finalName = editedColumnName.trim() || 'Untitled Section';
+    dispatch(updateColumn(columnId, { name: finalName }));
+    setEditingColumnId(null);
+    setEditedColumnName('');
   };
 
   const handleDeleteColumn = (columnId) => {
@@ -213,6 +215,7 @@ function KanbanBoard({ projectId, darkMode }) {
                             onKeyDown={e => { if (e.key === 'Enter') handleSaveColumn(column.id); if (e.key === 'Escape') setEditingColumnId(null); }}
                             autoFocus
                             onClick={e => e.stopPropagation()}
+                            placeholder="New Section"
                           />
                         ) : (
                           <h3
