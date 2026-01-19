@@ -23,12 +23,14 @@ function Sidebar({ projects, selectedProjectId, onSelectProject, onShowProjectMo
           Projects <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-slate-400'}`}>({projects.length})</span>
         </h2>
         <button
-          className="text-white bg-blue-500 hover:bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold leading-none transition-colors"
+          className="text-white bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 flex items-center justify-center transition-colors"
           title="Add Project"
           onClick={onShowProjectModal}
-          style={{padding: 0, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center'}}
         >
-          <span style={{display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%'}}>+</span>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
         </button>
       </div>
       <div className={`border-b ${darkMode ? 'border-gray-700' : 'border-slate-700'} mb-3`}></div>

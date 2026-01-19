@@ -33,6 +33,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
                       'July', 'August', 'September', 'October', 'November', 'December'];
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dayNamesShort = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   
   const goToPreviousMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
@@ -57,7 +58,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
     // Empty cells for days before the first day of month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(
-        <div key={`empty-${i}`} className={`p-2 min-h-[100px] ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}></div>
+        <div key={`empty-${i}`} className={`p-1 sm:p-2 min-h-[60px] sm:min-h-[100px] ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}></div>
       );
     }
     
@@ -70,23 +71,23 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
       days.push(
         <div 
           key={day} 
-          className={`p-2 min-h-[100px] border ${
+          className={`p-1 sm:p-2 min-h-[60px] sm:min-h-[100px] border ${
             darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
           } ${isToday(day) ? 'ring-2 ring-blue-500' : ''}`}
         >
-          <div className={`text-sm font-medium mb-1 ${
+          <div className={`text-xs sm:text-sm font-medium mb-1 ${
             isToday(day) 
               ? 'text-blue-500' 
               : darkMode ? 'text-gray-300' : 'text-gray-700'
           }`}>
             {day}
           </div>
-          <div className="space-y-1 overflow-y-auto max-h-[80px]">
+          <div className="space-y-1 overflow-y-auto max-h-[40px] sm:max-h-[80px]">
             {dayTasks.map(task => (
               <div
                 key={task.id}
                 onClick={() => onTaskClick(task)}
-                className={`text-xs p-1 rounded cursor-pointer truncate transition-colors ${
+                className={`text-[10px] sm:text-xs p-0.5 sm:p-1 rounded cursor-pointer truncate transition-colors ${
                   isPastDue && !task.completed
                     ? 'bg-red-100 text-red-800 hover:bg-red-200'
                     : darkMode 
@@ -110,21 +111,21 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
     <div className={`h-full flex flex-col ${darkMode ? 'text-white' : 'text-gray-900'}`}>
       {/* Calendar Header */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={goToPreviousMonth}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
               darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
             }`}
           >
             ◀
           </button>
-          <h2 className="text-xl font-bold min-w-[200px] text-center">
+          <h2 className="text-base sm:text-xl font-bold min-w-[140px] sm:min-w-[200px] text-center">
             {monthNames[month]} {year}
           </h2>
           <button
             onClick={goToNextMonth}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
               darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
             }`}
           >
@@ -133,7 +134,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
         </div>
         <button
           onClick={goToToday}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
           Today
         </button>
@@ -141,14 +142,15 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
       
       {/* Day Headers */}
       <div className="grid grid-cols-7 gap-px mb-px">
-        {dayNames.map(day => (
+        {dayNames.map((day, idx) => (
           <div 
             key={day} 
-            className={`p-2 text-center font-medium ${
+            className={`p-1 sm:p-2 text-center text-xs sm:text-sm font-medium ${
               darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
             }`}
           >
-            {day}
+            <span className="hidden sm:inline">{day}</span>
+            <span className="sm:hidden">{dayNamesShort[idx]}</span>
           </div>
         ))}
       </div>
@@ -159,17 +161,17 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
       </div>
       
       {/* Legend */}
-      <div className={`mt-4 flex items-center gap-4 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-        <div className="flex items-center gap-2">
-          <div className={`w-3 h-3 rounded ${darkMode ? 'bg-blue-900' : 'bg-blue-100'}`}></div>
+      <div className={`mt-4 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <div className="flex items-center gap-1 sm:gap-2">
+          <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded ${darkMode ? 'bg-blue-900' : 'bg-blue-100'}`}></div>
           <span>Upcoming</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-red-100"></div>
+        <div className="flex items-center gap-1 sm:gap-2">
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded bg-red-100"></div>
           <span>Overdue</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded ring-2 ring-blue-500"></div>
+        <div className="flex items-center gap-1 sm:gap-2">
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded ring-2 ring-blue-500"></div>
           <span>Today</span>
         </div>
       </div>

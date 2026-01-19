@@ -79,7 +79,7 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
   const hasResults = results.projects.length > 0 || results.tasks.length > 0;
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative w-full max-w-xs sm:max-w-sm lg:max-w-md">
       {/* Search Input */}
       <div className="relative">
         <input
@@ -88,20 +88,20 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
-          placeholder="Search projects & tasks... (Ctrl+K)"
-          className={`w-48 sm:w-64 lg:w-80 px-4 py-2 pl-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+          placeholder="Search... (Ctrl+K)"
+          className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 pl-8 sm:pl-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
             darkMode 
               ? 'bg-gray-700 text-white placeholder-gray-400 border-gray-600' 
               : 'bg-gray-100 text-gray-900 placeholder-gray-500 border-gray-300'
           } border`}
         />
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+        <span className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
           🔍
         </span>
         {query && (
           <button
             onClick={() => { setQuery(''); setResults({ projects: [], tasks: [] }); }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
           >
             ✕
           </button>
