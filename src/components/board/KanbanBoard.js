@@ -192,8 +192,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
               {...provided.droppableProps}
             >
               {columns.map((column, columnIndex) => {
-                const tasks = allTasks
-                  .filter(task => task.columnId === column.id)
+                const tasks = (tasksByColumn[column.id] || [])
                   .sort((a, b) => a.order - b.order);
                 
                 return (

@@ -93,7 +93,7 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
-          placeholder="Search... (Ctrl+K)"
+          placeholder={`Search ${totalSearchableItems} items... (Ctrl+K)`}
           className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 pl-8 sm:pl-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ceil transition-all ${
             darkMode 
               ? 'bg-raisin text-lavender placeholder-silver border-ceil/30' 
