@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode }) {
   const [query, setQuery] = useState('');
@@ -6,6 +6,11 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
   const [results, setResults] = useState({ projects: [], tasks: [] });
   const inputRef = useRef(null);
   const containerRef = useRef(null);
+
+  // Memoize task count for display optimization
+  const totalSearchableItems = useMemo(() => {
+    return projects.length + tasks.length;
+  }, [projects.length, tasks.length]);
 
   // Get project name helper
   const getProjectName = (projectId) => {
