@@ -62,10 +62,10 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
           key={day}
           onClick={(e) => { e.stopPropagation(); handleSelectDate(day); }}
           className={`w-7 h-7 text-xs rounded-full flex items-center justify-center transition-colors
-            ${isSelected ? 'bg-blue-500 text-white' : ''}
-            ${isToday && !isSelected ? 'ring-1 ring-blue-500' : ''}
-            ${!isSelected ? (darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200') : ''}
-            ${darkMode ? 'text-gray-200' : 'text-gray-700'}
+            ${isSelected ? 'bg-ceil text-raisin' : ''}
+            ${isToday && !isSelected ? 'ring-1 ring-ceil' : ''}
+            ${!isSelected ? (darkMode ? 'hover:bg-ceil/30' : 'hover:bg-lavender') : ''}
+            ${darkMode ? 'text-lavender' : 'text-raisin'}
           `}
         >
           {day}
@@ -74,17 +74,17 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
     }
 
     return (
-      <div className={`absolute top-full right-0  z-30 p-2 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`} onClick={e => e.stopPropagation()}>
+      <div className={`absolute top-full right-0  z-30 p-2 rounded-lg shadow-lg ${darkMode ? 'bg-raisin border border-ceil/30' : 'bg-white border border-lavender'}`} onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
-          <button onClick={goToPrevMonth} className={`w-6 h-6 flex items-center justify-center rounded ${darkMode ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-100 text-gray-600'}`}>◀</button>
-          <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>{monthNames[month]} {year}</span>
-          <button onClick={goToNextMonth} className={`w-6 h-6 flex items-center justify-center rounded ${darkMode ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-100 text-gray-600'}`}>▶</button>
+          <button onClick={goToPrevMonth} className={`w-6 h-6 flex items-center justify-center rounded ${darkMode ? 'hover:bg-ceil/30 text-lavender' : 'hover:bg-lavender text-raisin'}`}>◀</button>
+          <span className={`text-sm font-medium ${darkMode ? 'text-lavender' : 'text-raisin'}`}>{monthNames[month]} {year}</span>
+          <button onClick={goToNextMonth} className={`w-6 h-6 flex items-center justify-center rounded ${darkMode ? 'hover:bg-ceil/30 text-lavender' : 'hover:bg-lavender text-raisin'}`}>▶</button>
         </div>
         {/* Day names */}
         <div className="grid grid-cols-7 gap-0.5 mb-1">
           {dayNames.map((d, i) => (
-            <div key={i} className={`w-7 h-5 text-[10px] flex items-center justify-center ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>{d}</div>
+            <div key={i} className="w-7 h-5 text-[10px] flex items-center justify-center text-silver">{d}</div>
           ))}
         </div>
         {/* Days grid */}
@@ -99,16 +99,16 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
     <div
       className={`p-3 rounded-lg shadow mb-2 cursor-pointer transition-all relative ${
         isDragging
-          ? 'shadow-xl ring-2 ring-blue-400 rotate-2'
+          ? 'shadow-xl ring-2 ring-ceil rotate-2'
           : 'hover:shadow-md'
       } ${
-        darkMode ? 'bg-gray-700 hover:bg-gray-650' : 'bg-white'
+        darkMode ? 'bg-dusk hover:bg-dusk/80 border border-ceil/20' : 'bg-white'
       }`}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setShowDatePicker(false); }}
     >
-      <h4 className={`font-medium break-words overflow-hidden ${darkMode ? 'text-gray-100' : 'text-gray-800'}`} style={{ wordBreak: 'break-word' }}>
+      <h4 className={`font-medium break-words overflow-hidden ${darkMode ? 'text-lavender' : 'text-raisin'}`} style={{ wordBreak: 'break-word' }}>
         {task.title}
       </h4>
       
@@ -116,8 +116,8 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
       {task.dueDate && (
         <p className={`text-sm mt-2 flex items-center gap-1 ${
           isOverdue 
-            ? 'text-red-500' 
-            : darkMode ? 'text-gray-400' : 'text-gray-500'
+            ? 'text-rose' 
+            : 'text-silver'
         }`}>
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19.1,2H18V1c0-0.6-0.4-1-1-1s-1,0.4-1,1v1H8V1c0-0.6-0.4-1-1-1S6,0.4,6,1v1H4.9C2.2,2,0,4.2,0,6.9v12.1C0,21.8,2.2,24,4.9,24h14.1c2.7,0,4.9-2.2,4.9-4.9V6.9C24,4.2,21.8,2,19.1,2z M4.9,4H6v1c0,0.6,0.4,1,1,1s1-0.4,1-1V4h8v1c0,0.6,0.4,1,1,1s1-0.4,1-1V4h1.1C20.7,4,22,5.3,22,6.9V8H2V6.9C2,5.3,3.3,4,4.9,4z M19.1,22H4.9C3.3,22,2,20.7,2,19.1V10h20v9.1C22,20.7,20.7,22,19.1,22z"/>
@@ -129,7 +129,7 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
       {/* Calendar icon on hover */}
       {hovered && !task.dueDate && (
         <button
-          className={`absolute top-2 right-2 p-1 rounded transition-colors ${darkMode ? 'hover:bg-gray-600 text-gray-400' : 'hover:bg-gray-200 text-gray-500'}`}
+          className={`absolute top-2 right-2 p-1 rounded transition-colors ${darkMode ? 'hover:bg-ceil/30 text-silver' : 'hover:bg-lavender text-silver'}`}
           onClick={handleDateClick}
           title="Set due date"
         >

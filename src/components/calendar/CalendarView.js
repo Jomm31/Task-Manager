@@ -58,7 +58,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
     // Empty cells for days before the first day of month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(
-        <div key={`empty-${i}`} className={`p-1 sm:p-2 min-h-[60px] sm:min-h-[100px] ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}></div>
+        <div key={`empty-${i}`} className={`p-1 sm:p-2 min-h-[60px] sm:min-h-[100px] ${darkMode ? 'bg-raisin/50' : 'bg-lavender/30'}`}></div>
       );
     }
     
@@ -72,13 +72,13 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
         <div 
           key={day} 
           className={`p-1 sm:p-2 min-h-[60px] sm:min-h-[100px] border ${
-            darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
-          } ${isToday(day) ? 'ring-2 ring-blue-500' : ''}`}
+            darkMode ? 'border-ceil/30 bg-raisin/80' : 'border-lavender bg-white'
+          } ${isToday(day) ? 'ring-2 ring-ceil' : ''}`}
         >
           <div className={`text-xs sm:text-sm font-medium mb-1 ${
             isToday(day) 
-              ? 'text-blue-500' 
-              : darkMode ? 'text-gray-300' : 'text-gray-700'
+              ? 'text-ceil' 
+              : darkMode ? 'text-lavender' : 'text-raisin'
           }`}>
             {day}
           </div>
@@ -89,10 +89,10 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
                 onClick={() => onTaskClick(task)}
                 className={`text-[10px] sm:text-xs p-0.5 sm:p-1 rounded cursor-pointer truncate transition-colors ${
                   isPastDue && !task.completed
-                    ? 'bg-red-100 text-red-800 hover:bg-red-200'
+                    ? 'bg-rose/30 text-rose hover:bg-rose/50'
                     : darkMode 
-                      ? 'bg-blue-900 text-blue-200 hover:bg-blue-800' 
-                      : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                      ? 'bg-ceil/30 text-lavender hover:bg-ceil/50' 
+                      : 'bg-ceil/20 text-raisin hover:bg-ceil/40'
                 }`}
                 title={`${task.title} - ${getProjectName(task.projectId)}`}
               >
@@ -108,14 +108,14 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
   };
   
   return (
-    <div className={`h-full flex flex-col ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+    <div className={`h-full flex flex-col ${darkMode ? 'text-lavender' : 'text-raisin'}`}>
       {/* Calendar Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={goToPreviousMonth}
             className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
-              darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
+              darkMode ? 'hover:bg-ceil/30' : 'hover:bg-lavender'
             }`}
           >
             ◀
@@ -126,7 +126,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
           <button
             onClick={goToNextMonth}
             className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
-              darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
+              darkMode ? 'hover:bg-ceil/30' : 'hover:bg-lavender'
             }`}
           >
             ▶
@@ -134,7 +134,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
         </div>
         <button
           onClick={goToToday}
-          className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base bg-ceil text-raisin rounded-lg hover:bg-ceil/80 transition-colors"
         >
           Today
         </button>
@@ -146,7 +146,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
           <div 
             key={day} 
             className={`p-1 sm:p-2 text-center text-xs sm:text-sm font-medium ${
-              darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
+              darkMode ? 'bg-ceil/20 text-lavender' : 'bg-lavender text-raisin'
             }`}
           >
             <span className="hidden sm:inline">{day}</span>
@@ -161,17 +161,17 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
       </div>
       
       {/* Legend */}
-      <div className={`mt-4 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+      <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-silver">
         <div className="flex items-center gap-1 sm:gap-2">
-          <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded ${darkMode ? 'bg-blue-900' : 'bg-blue-100'}`}></div>
+          <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded ${darkMode ? 'bg-ceil/30' : 'bg-ceil/20'}`}></div>
           <span>Upcoming</span>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
-          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded bg-red-100"></div>
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded bg-rose/30"></div>
           <span>Overdue</span>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
-          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded ring-2 ring-blue-500"></div>
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded ring-2 ring-ceil"></div>
           <span>Today</span>
         </div>
       </div>

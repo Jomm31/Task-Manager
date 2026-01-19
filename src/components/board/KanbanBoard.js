@@ -236,8 +236,8 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      className={`w-[260px] min-w-[260px] sm:w-[280px] sm:min-w-[280px] ${darkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-lg p-3 sm:p-4 flex flex-col ${
-                        snapshot.isDragging ? 'shadow-2xl ring-2 ring-blue-400' : ''
+                      className={`w-[260px] min-w-[260px] sm:w-[280px] sm:min-w-[280px] ${darkMode ? 'bg-dusk/90 border border-ceil/20' : 'bg-white/80'} rounded-lg p-3 sm:p-4 flex flex-col ${
+                        snapshot.isDragging ? 'shadow-2xl ring-2 ring-ceil' : ''
                       }`}
                     >
                       {/* Column Header - this is the drag handle */}
@@ -247,7 +247,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                       >
                         {editingColumnId === column.id ? (
                           <input
-                            className={`font-bold ${darkMode ? 'text-white bg-gray-700' : 'text-gray-700 bg-white'} rounded px-2 py-1 w-[200px] focus:outline-none`}
+                            className={`font-bold ${darkMode ? 'text-lavender bg-raisin' : 'text-raisin bg-lavender'} rounded px-2 py-1 w-[200px] focus:outline-none focus:ring-2 focus:ring-ceil`}
                             value={editedColumnName}
                             onChange={e => setEditedColumnName(e.target.value)}
                             onBlur={() => handleSaveColumn(column.id)}
@@ -258,33 +258,33 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                           />
                         ) : (
                           <h3
-                            className={`font-bold flex-1 cursor-pointer ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}
+                            className={`font-bold flex-1 cursor-pointer ${darkMode ? 'text-lavender' : 'text-raisin'}`}
                             onDoubleClick={() => handleEditColumn(column.id, column.name)}
                             title="Double click to rename, drag to reorder"
                           >
-                            {column.name} <span className={`text-xs font-normal ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>({tasks.length})</span>
+                            {column.name} <span className="text-xs font-normal text-silver">({tasks.length})</span>
                           </h3>
                         )}
                         {/* 3-dots menu button, only visible on hover or when menu is open */}
                         <div className="relative ml-2">
                           <button
-                            className={`${menuOpenColumnId === column.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity p-1 rounded-md ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-300'}`}
+                            className={`${menuOpenColumnId === column.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity p-1 rounded-md ${darkMode ? 'hover:bg-ceil/30' : 'hover:bg-lavender'}`}
                             onClick={e => {
                               e.stopPropagation();
                               setMenuOpenColumnId(column.id === menuOpenColumnId ? null : column.id);
                             }}
                             title="Column options"
                           >
-                            <span style={{fontSize: '1.5em', lineHeight: 1}} className={darkMode ? 'text-white' : 'text-gray-600'}>⋯</span>
+                            <span style={{fontSize: '1.5em', lineHeight: 1}} className={darkMode ? 'text-lavender' : 'text-raisin'}>⋯</span>
                           </button>
                           {/* Dropdown menu */}
                           {menuOpenColumnId === column.id && (
                             <div 
                               ref={menuRef}
-                              className={`absolute right-0 z-10 mt-2 w-44 rounded shadow-lg ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+                              className={`absolute right-0 z-10 mt-2 w-44 rounded shadow-lg ${darkMode ? 'bg-raisin text-lavender' : 'bg-white text-raisin'} border ${darkMode ? 'border-ceil/30' : 'border-lavender'}`}
                               onClick={e => e.stopPropagation()}>
                               <button
-                                className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-blue-100'}`}
+                                className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-ceil/30' : 'hover:bg-lavender'}`}
                                 onClick={() => {
                                   setEditingColumnId(column.id);
                                   setEditedColumnName(column.name);
@@ -297,7 +297,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                                 Rename column
                               </button>
                               <button
-                                className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-red-100 text-red-600'}`}
+                                className={`w-full text-left px-4 py-2 flex items-center gap-2 text-rose ${darkMode ? 'hover:bg-rose/20' : 'hover:bg-rose/10'}`}
                                 onClick={() => { handleDeleteColumn(column.id); setMenuOpenColumnId(null); }}
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -308,10 +308,10 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                                 </svg>
                                 Delete column
                               </button>
-                              <div className="border-t my-1 border-gray-300 dark:border-gray-600"></div>
+                              <div className="border-t my-1 border-ceil/30"></div>
                               <div className="group/add-section relative">
                                 <button
-                                  className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-green-100'}`}
+                                  className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-ceil/30' : 'hover:bg-lavender'}`}
                                   onMouseEnter={() => setAddSectionHover(column.id)}
                                   onMouseLeave={() => setAddSectionHover(null)}
                                 >
@@ -323,11 +323,11 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                                 </button>
                                 {/* Add section submenu */}
                                 {addSectionHover === column.id && (
-                                  <div className={`absolute left-full top-0  w-52 rounded shadow-lg ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+                                  <div className={`absolute left-full top-0  w-52 rounded shadow-lg ${darkMode ? 'bg-raisin text-lavender' : 'bg-white text-raisin'} border ${darkMode ? 'border-ceil/30' : 'border-lavender'}`}
                                        onMouseEnter={() => setAddSectionHover(column.id)}
                                        onMouseLeave={() => setAddSectionHover(null)}>
                                     <button
-                                      className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-blue-100'}`}
+                                      className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-ceil/30' : 'hover:bg-lavender'}`}
                                       onClick={() => handleAddSection(columnIndex, 'left')}
                                     >
                                       <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -337,7 +337,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                                       Add section to left
                                     </button>
                                     <button
-                                      className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-blue-100'}`}
+                                      className={`w-full text-left px-4 py-2 flex items-center gap-2 ${darkMode ? 'hover:bg-ceil/30' : 'hover:bg-lavender'}`}
                                       onClick={() => handleAddSection(columnIndex, 'right')}
                                     >
                                       <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -360,14 +360,14 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                           <div 
                             className={`min-h-[40px] rounded transition-colors ${
                               snapshot.isDraggingOver 
-                                ? darkMode ? 'bg-gray-700' : 'bg-gray-300' 
+                                ? darkMode ? 'bg-ceil/20' : 'bg-lavender' 
                                 : ''
                             }`}
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                           >
                             {tasks.length === 0 && !snapshot.isDraggingOver ? (
-                              <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>No tasks</p>
+                              <p className="text-sm text-silver">No tasks</p>
                             ) : (
                               tasks.map((task, index) => (
                                 <Draggable key={task.id} draggableId={String(task.id)} index={index}>
@@ -398,7 +398,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                       {addingTaskColumnId === column.id ? (
                         <div className="mt-3">
                           <input
-                            className={`w-full p-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                            className={`w-full p-2 rounded border focus:outline-none focus:ring-2 focus:ring-ceil ${darkMode ? 'bg-raisin border-ceil/30 text-lavender' : 'bg-white border-lavender text-raisin'}`}
                             value={newTaskTitle}
                             onChange={e => setNewTaskTitle(e.target.value)}
                             placeholder="Task title"
@@ -419,7 +419,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                         </div>
                       ) : (
                         <button
-                          className={`mt-3 p-2 rounded text-left transition-colors ${darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-500 hover:bg-gray-300'}`}
+                          className={`mt-3 p-2 rounded text-left transition-colors ${darkMode ? 'text-silver hover:bg-ceil/20' : 'text-silver hover:bg-lavender'}`}
                           onClick={() => setAddingTaskColumnId(column.id)}
                         >+ Add Task</button>
                       )}
@@ -435,9 +435,9 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
 
             {/* Add Column Button */}
             {addingColumn ? (
-              <div className={`w-[260px] min-w-[260px] sm:w-[280px] sm:min-w-[280px] ${darkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-lg p-3 sm:p-4 h-fit`}>
+              <div className={`w-[260px] min-w-[260px] sm:w-[280px] sm:min-w-[280px] ${darkMode ? 'bg-dusk/90 border border-ceil/20' : 'bg-white/80'} rounded-lg p-3 sm:p-4 h-fit`}>
                 <input
-                  className={`w-full p-2 rounded border mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                  className={`w-full p-2 rounded border mb-2 focus:outline-none focus:ring-2 focus:ring-ceil ${darkMode ? 'bg-raisin border-ceil/30 text-lavender' : 'bg-white border-lavender text-raisin'}`}
                   value={newColumnName}
                   onChange={e => setNewColumnName(e.target.value)}
                   placeholder="Column name"
@@ -446,18 +446,18 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                 />
                 <div className="flex gap-2">
                   <button
-                    className="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition-colors"
+                    className="flex-1 bg-ceil hover:bg-ceil/80 text-raisin px-3 py-1 rounded transition-colors"
                     onClick={handleAddColumn}
                   >Add</button>
                   <button
-                    className={`flex-1 ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-slate-400 hover:bg-slate-500'} text-white px-3 py-1 rounded transition-colors`}
+                    className="flex-1 bg-silver/50 hover:bg-silver/70 text-lavender px-3 py-1 rounded transition-colors"
                     onClick={() => { setAddingColumn(false); setNewColumnName(''); }}
                   >Cancel</button>
                 </div>
               </div>
             ) : (
               <button
-                className={`h-fit min-w-[150px] sm:min-w-[200px] px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${darkMode ? 'bg-gray-0 hover:bg-gray-800 text-gray-300' : 'bg-gray-0 hover:bg-gray-400 text-gray-800'}`}
+                className={`h-fit min-w-[150px] sm:min-w-[200px] px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${darkMode ? 'hover:bg-ceil/20 text-lavender' : 'hover:bg-white/50 text-raisin'}`}
                 onClick={() => setAddingColumn(true)}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -475,7 +475,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
       <div 
         ref={scrollbarRef}
         onScroll={handleScrollbarScroll}
-        className={`fixed bottom-0 right-0 overflow-x-auto z-40 transition-all duration-300 hidden sm:block ${darkMode ? 'scrollbar-dark bg-gray-900' : 'scrollbar-light bg-gray-100'}`}
+        className={`fixed bottom-0 right-0 overflow-x-auto z-40 transition-all duration-300 hidden sm:block ${darkMode ? 'scrollbar-dark bg-raisin' : 'scrollbar-light bg-lavender'}`}
         style={{ left: sidebarOpen ? '256px' : '0', paddingLeft: '1.5rem', paddingRight: '1.5rem' }}
       >
         <div style={{ width: `${columns.length * 296 + 200}px`, height: '1px' }}></div>
@@ -494,17 +494,17 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
 
       {/* Delete Modal */}
       {deleteModal.open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
-          <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-md`}>
-            <h2 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">Are you sure you want to delete this section?</h2>
-            <p className="mb-4 text-gray-700 dark:text-gray-300">
-              This section <span className="font-semibold">{deleteModal.column?.name}</span> includes
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-midnight/80 p-4">
+          <div className="bg-dusk text-lavender rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-md border border-ceil/30">
+            <h2 className="text-lg font-bold mb-2 text-mist">Are you sure you want to delete this section?</h2>
+            <p className="mb-4 text-mauve">
+              This section <span className="font-semibold text-lavender">{deleteModal.column?.name}</span> includes
               {deleteModal.completed > 0 && (
-                <> <span className="font-semibold">{deleteModal.completed}</span> completed task{deleteModal.completed > 1 ? 's' : ''}</>
+                <> <span className="font-semibold text-lavender">{deleteModal.completed}</span> completed task{deleteModal.completed > 1 ? 's' : ''}</>
               )}
               {deleteModal.completed > 0 && deleteModal.incomplete > 0 && ' and'}
               {deleteModal.incomplete > 0 && (
-                <> <span className="font-semibold">{deleteModal.incomplete}</span> incomplete task{deleteModal.incomplete > 1 ? 's' : ''}</>
+                <> <span className="font-semibold text-lavender">{deleteModal.incomplete}</span> incomplete task{deleteModal.incomplete > 1 ? 's' : ''}</>
               )}.
             </p>
             <div className="flex flex-col gap-2 mb-4">
@@ -514,8 +514,9 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                   name="deleteOption"
                   checked={deleteModal.deleteOption !== 'delete'}
                   onChange={() => setDeleteModal({ ...deleteModal, deleteOption: 'keep' })}
+                  className="accent-ceil"
                 />
-                <span className="text-gray-800 dark:text-gray-100">
+                <span className="text-lavender">
                   Delete this section and keep these {deleteModal.incomplete} task{deleteModal.incomplete > 1 ? 's' : ''}
                 </span>
               </label>
@@ -525,21 +526,22 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
                   name="deleteOption"
                   checked={deleteModal.deleteOption === 'delete'}
                   onChange={() => setDeleteModal({ ...deleteModal, deleteOption: 'delete' })}
+                  className="accent-ceil"
                 />
-                <span className="text-gray-800 dark:text-gray-100">
+                <span className="text-lavender">
                   Delete this section and delete these {deleteModal.tasks.length} task{deleteModal.tasks.length !== 1 ? 's' : ''}
                 </span>
               </label>
             </div>
             <div className="flex gap-2">
               <button
-                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 px-4 py-2 rounded"
+                className="flex-1 bg-ceil/30 hover:bg-ceil/50 text-lavender px-4 py-2 rounded"
                 onClick={() => setDeleteModal({ open: false, column: null, completed: 0, incomplete: 0, tasks: [] })}
               >
                 Cancel
               </button>
               <button
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                className="flex-1 bg-rose hover:bg-rose-dark text-mist px-4 py-2 rounded"
                 onClick={() => {
                   if (deleteModal.deleteOption === 'delete') {
                     handleDeleteColumnAndTasks();

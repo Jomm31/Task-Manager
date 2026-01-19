@@ -89,19 +89,19 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
           placeholder="Search... (Ctrl+K)"
-          className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 pl-8 sm:pl-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+          className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 pl-8 sm:pl-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ceil transition-all ${
             darkMode 
-              ? 'bg-gray-700 text-white placeholder-gray-400 border-gray-600' 
-              : 'bg-gray-100 text-gray-900 placeholder-gray-500 border-gray-300'
+              ? 'bg-raisin text-lavender placeholder-silver border-ceil/30' 
+              : 'bg-lavender/50 text-raisin placeholder-silver border-lavender'
           } border`}
         />
-        <span className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+        <span className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-silver text-sm">
           🔍
         </span>
         {query && (
           <button
             onClick={() => { setQuery(''); setResults({ projects: [], tasks: [] }); }}
-            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-silver hover:text-lavender"
           >
             ✕
           </button>
@@ -111,10 +111,10 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
       {/* Search Results Dropdown */}
       {isOpen && query.trim() && (
         <div className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto ${
-          darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
+          darkMode ? 'bg-raisin border border-ceil/30' : 'bg-white border border-lavender'
         }`}>
           {!hasResults ? (
-            <div className={`p-4 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+            <div className="p-4 text-center text-silver">
               No results found for "{query}"
             </div>
           ) : (
@@ -123,7 +123,7 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
               {results.projects.length > 0 && (
                 <div>
                   <div className={`px-4 py-2 text-xs font-semibold uppercase tracking-wide ${
-                    darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
+                    darkMode ? 'bg-ceil/20 text-silver' : 'bg-lavender text-silver'
                   }`}>
                     Projects
                   </div>
@@ -132,12 +132,12 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
                       key={project.id}
                       onClick={() => handleProjectClick(project)}
                       className={`px-4 py-3 cursor-pointer flex items-center gap-3 transition-colors ${
-                        darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                        darkMode ? 'hover:bg-ceil/20' : 'hover:bg-lavender/50'
                       }`}
                     >
                       <span className="text-lg">📁</span>
                       <div>
-                        <div className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`font-medium ${darkMode ? 'text-lavender' : 'text-raisin'}`}>
                           {highlightMatch(project.name, query)}
                         </div>
                       </div>
@@ -150,7 +150,7 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
               {results.tasks.length > 0 && (
                 <div>
                   <div className={`px-4 py-2 text-xs font-semibold uppercase tracking-wide ${
-                    darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
+                    darkMode ? 'bg-ceil/20 text-silver' : 'bg-lavender text-silver'
                   }`}>
                     Tasks
                   </div>
@@ -159,15 +159,15 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
                       key={task.id}
                       onClick={() => handleTaskClick(task)}
                       className={`px-4 py-3 cursor-pointer flex items-center gap-3 transition-colors ${
-                        darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                        darkMode ? 'hover:bg-ceil/20' : 'hover:bg-lavender/50'
                       }`}
                     >
                       <span className="text-lg">📋</span>
                       <div className="flex-1 min-w-0">
-                        <div className={`font-medium truncate ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`font-medium truncate ${darkMode ? 'text-lavender' : 'text-raisin'}`}>
                           {highlightMatch(task.title, query)}
                         </div>
-                        <div className={`text-sm truncate ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        <div className="text-sm truncate text-silver">
                           in {getProjectName(task.projectId)}
                           {task.dueDate && ` • Due: ${new Date(task.dueDate).toLocaleDateString()}`}
                         </div>
@@ -193,7 +193,7 @@ function highlightMatch(text, query) {
   
   return parts.map((part, i) => 
     regex.test(part) ? (
-      <span key={i} className="bg-yellow-300 text-gray-900 rounded px-0.5">{part}</span>
+      <span key={i} className="bg-ceil text-raisin rounded px-0.5">{part}</span>
     ) : part
   );
 }

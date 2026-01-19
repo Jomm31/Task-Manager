@@ -31,36 +31,36 @@ function TaskModal({ task, onClose, onSave, onDelete, darkMode }) {
 
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-midnight/80 flex items-center justify-center z-50 p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className={`rounded-lg p-6 w-full max-w-md shadow-xl relative ${
-        darkMode ? 'bg-gray-800' : 'bg-white'
+        darkMode ? 'bg-dusk border border-ceil/30' : 'bg-white'
       }`}>
         <button
           className={`absolute top-3 right-3 text-xl w-8 h-8 flex items-center justify-center rounded-full transition-colors ${
             darkMode 
-              ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' 
-              : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'
+              ? 'text-silver hover:text-lavender hover:bg-ceil/30' 
+              : 'text-silver hover:text-raisin hover:bg-lavender'
           }`}
           onClick={onClose}
         >
           ×
         </button>
         
-        <h2 className={`text-xl font-bold mb-5 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+        <h2 className={`text-xl font-bold mb-5 ${darkMode ? 'text-mist' : 'text-raisin'}`}>
           Edit Task
         </h2>
         
         <div className="mb-4">
-          <label className={`block mb-1.5 font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <label className={`block mb-1.5 font-medium ${darkMode ? 'text-lavender' : 'text-raisin'}`}>
             Title
           </label>
           <input 
-            className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${
+            className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-ceil focus:border-ceil outline-none transition-all ${
               darkMode 
-                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                : 'bg-white border-gray-300 text-gray-900'
+                ? 'bg-raisin border-ceil/30 text-lavender placeholder-silver' 
+                : 'bg-white border-lavender text-raisin'
             }`}
             value={title} 
             onChange={e => setTitle(e.target.value)}
@@ -69,14 +69,14 @@ function TaskModal({ task, onClose, onSave, onDelete, darkMode }) {
         </div>
         
         <div className="mb-4">
-          <label className={`block mb-1.5 font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <label className={`block mb-1.5 font-medium ${darkMode ? 'text-lavender' : 'text-raisin'}`}>
             Description
           </label>
           <textarea 
-            className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none ${
+            className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-ceil focus:border-ceil outline-none transition-all resize-none ${
               darkMode 
-                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                : 'bg-white border-gray-300 text-gray-900'
+                ? 'bg-raisin border-ceil/30 text-lavender placeholder-silver' 
+                : 'bg-white border-lavender text-raisin'
             }`}
             rows={4}
             value={description} 
@@ -86,14 +86,14 @@ function TaskModal({ task, onClose, onSave, onDelete, darkMode }) {
         </div>
         
         <div className="mb-6">
-          <label className={`block mb-1.5 font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <label className={`block mb-1.5 font-medium ${darkMode ? 'text-lavender' : 'text-raisin'}`}>
             Due Date
           </label>
           <input
-            className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${
+            className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-ceil focus:border-ceil outline-none transition-all ${
               darkMode 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
+                ? 'bg-raisin border-ceil/30 text-lavender' 
+                : 'bg-white border-lavender text-raisin'
             }`}
             type="date"
             value={dueDate}
@@ -104,13 +104,13 @@ function TaskModal({ task, onClose, onSave, onDelete, darkMode }) {
         <div className="flex gap-3">
           <button
             onClick={handleSave}
-            className="flex-1 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="flex-1 bg-sage text-raisin px-4 py-2.5 rounded-lg hover:bg-sage-dark transition-colors font-medium"
           >
             Save Changes
           </button>
           <button
             onClick={handleDelete}
-            className="px-4 py-2.5 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium"
+            className="px-4 py-2.5 rounded-lg bg-rose text-mist hover:bg-rose-dark transition-colors font-medium"
           >
             Delete
           </button>

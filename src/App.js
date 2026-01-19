@@ -107,19 +107,19 @@ function App() {
   };
 
   return (
-    <div className={`flex flex-col h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
+    <div className={`flex flex-col h-screen ${darkMode ? 'dark bg-raisin' : 'bg-lavender'}`}>
       {/* Header */}
-      <header className={`fixed top-0 left-0 w-full h-14 ${darkMode ? 'bg-gray-800' : 'bg-slate-900'} flex items-center justify-between px-2 sm:px-4 z-30`}>
+      <header className={`fixed top-0 left-0 w-full h-14 ${darkMode ? 'bg-raisin' : 'bg-raisin'} flex items-center justify-between px-2 sm:px-4 z-30 border-b ${darkMode ? 'border-ceil/30' : 'border-ceil/30'}`}>
         <div className="flex items-center shrink-0">
           <button
-            className="text-white text-xl sm:text-2xl mr-2 sm:mr-4 focus:outline-none hover:bg-slate-700 p-1.5 sm:p-2 rounded-lg transition-colors"
+            className="text-lavender text-xl sm:text-2xl mr-2 sm:mr-4 focus:outline-none hover:bg-ceil/20 p-1.5 sm:p-2 rounded-lg transition-colors"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-label={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
           >
             <span className="inline-block align-middle">&#9776;</span>
           </button>
-          <span className="text-white text-base sm:text-lg font-bold hidden sm:block">Task Manager</span>
-          <span className="text-white text-base font-bold sm:hidden">TM</span>
+          <span className="text-lavender text-base sm:text-lg font-bold hidden sm:block">Task Manager</span>
+          <span className="text-lavender text-base font-bold sm:hidden">TM</span>
         </div>
         
         {/* Center - Search Bar */}
@@ -135,13 +135,13 @@ function App() {
         
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           {/* View Toggle */}
-          <div className={`flex rounded-lg overflow-hidden ${darkMode ? 'bg-gray-700' : 'bg-gray-700'}`}>
+          <div className="flex rounded-lg overflow-hidden bg-ceil/20">
             <button
               onClick={() => setCurrentView('board')}
               className={`px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors ${
                 currentView === 'board'
-                  ? 'bg-blue-500 text-white'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-600'
+                  ? 'bg-ceil text-raisin'
+                  : 'text-lavender hover:text-white hover:bg-ceil/30'
               }`}
               title="Board View"
             >
@@ -151,8 +151,8 @@ function App() {
               onClick={() => setCurrentView('calendar')}
               className={`px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors ${
                 currentView === 'calendar'
-                  ? 'bg-blue-500 text-white'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-600'
+                  ? 'bg-ceil text-raisin'
+                  : 'text-lavender hover:text-white hover:bg-ceil/30'
               }`}
               title="Calendar View"
             >
@@ -162,7 +162,7 @@ function App() {
           
           {/* Theme Toggle */}
           <button
-            className={`p-1.5 sm:p-2 rounded-lg transition-colors ${darkMode ? 'bg-yellow-500 text-gray-900 hover:bg-yellow-400' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
+            className={`p-1.5 sm:p-2 rounded-lg transition-colors ${darkMode ? 'bg-pastel text-raisin hover:bg-pastel/80' : 'bg-ceil/30 text-lavender hover:bg-ceil/50'}`}
             onClick={() => setDarkMode(!darkMode)}
             title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
@@ -197,7 +197,7 @@ function App() {
         </aside>
 
         {/* Main Content */}
-        <main className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : ''} ${darkMode ? 'bg-gray-900' : 'bg-gray-100'} p-4 md:p-6`}>
+        <main className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : ''} ${darkMode ? 'bg-raisin' : 'bg-lavender'} p-4 md:p-6`}>
           {currentView === 'calendar' ? (
             <CalendarView
               tasks={allTasks}
@@ -209,7 +209,7 @@ function App() {
             <KanbanBoard projectId={selectedProjectId} darkMode={darkMode} sidebarOpen={sidebarOpen} />
           ) : (
             <div className="flex items-center justify-center h-full">
-              <p className={`text-xl ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Select a project to view tasks</p>
+              <p className={`text-xl ${darkMode ? 'text-silver' : 'text-silver'}`}>Select a project to view tasks</p>
             </div>
           )}
         </main>

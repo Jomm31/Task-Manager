@@ -17,13 +17,13 @@ function Sidebar({ projects, selectedProjectId, onSelectProject, onShowProjectMo
   };
 
   return (
-    <div className={`h-full w-64 ${darkMode ? 'bg-gray-800 text-gray-100' : 'bg-slate-800 text-white'} p-4 flex flex-col`}>
+    <div className={`h-full w-64 ${darkMode ? 'bg-raisin' : 'bg-raisin'} text-lavender p-4 flex flex-col border-r border-ceil/30`}>
       <div className="flex items-center mb-3">
         <h2 className="text-lg font-bold flex-1">
-          Projects <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-slate-400'}`}>({projects.length})</span>
+          Projects <span className="text-xs text-silver">({projects.length})</span>
         </h2>
         <button
-          className="text-white bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 flex items-center justify-center transition-colors"
+          className="text-raisin bg-ceil hover:bg-ceil/80 rounded-full w-7 h-7 flex items-center justify-center transition-colors"
           title="Add Project"
           onClick={onShowProjectModal}
         >
@@ -33,7 +33,7 @@ function Sidebar({ projects, selectedProjectId, onSelectProject, onShowProjectMo
           </svg>
         </button>
       </div>
-      <div className={`border-b ${darkMode ? 'border-gray-700' : 'border-slate-700'} mb-3`}></div>
+      <div className="border-b border-ceil/30 mb-3"></div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="projects">
           {(provided) => (
@@ -43,7 +43,7 @@ function Sidebar({ projects, selectedProjectId, onSelectProject, onShowProjectMo
               {...provided.droppableProps}
             >
               {projects.length === 0 ? (
-                <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-slate-400'}`}>No projects yet</p>
+                <p className="text-sm text-silver">No projects yet</p>
               ) : (
                 projects.map((project, index) => (
                   <Draggable key={project.id} draggableId={String(project.id)} index={index}>
