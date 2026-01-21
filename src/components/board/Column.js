@@ -43,7 +43,7 @@ function Column({
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`w-[260px] min-w-[260px] sm:w-[280px] sm:min-w-[280px] ${darkMode ? 'bg-dusk/90 border border-ceil/20' : 'bg-white/80'} rounded-lg p-3 sm:p-4 flex flex-col ${
+          className={`w-[260px] min-w-[260px] sm:w-[280px] sm:min-w-[280px] min-h-[300px] ${darkMode ? 'bg-dusk/90 border border-ceil/20' : 'bg-white/80'} rounded-lg p-3 sm:p-4 flex flex-col ${
             snapshot.isDragging ? 'shadow-2xl ring-2 ring-ceil' : ''
           }`}
         >

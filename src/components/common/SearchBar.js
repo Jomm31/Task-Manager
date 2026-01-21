@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode }) {
   const [query, setQuery] = useState('');
@@ -6,6 +6,11 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
   const [results, setResults] = useState({ projects: [], tasks: [] });
   const inputRef = useRef(null);
   const containerRef = useRef(null);
+
+  // Memoize task count for display optimization
+  const totalSearchableItems = useMemo(() => {
+    return projects.length + tasks.length;
+  }, [projects.length, tasks.length]);
 
   // Get project name helper
   const getProjectName = (projectId) => {
@@ -88,7 +93,7 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
-          placeholder="Search... (Ctrl+K)"
+          placeholder={`Search ${totalSearchableItems} items... (Ctrl+K)`}
           className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 pl-8 sm:pl-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ceil transition-all ${
             darkMode 
               ? 'bg-raisin text-lavender placeholder-silver border-ceil/30' 

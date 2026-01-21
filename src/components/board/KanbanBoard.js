@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { selectColumnsByProject } from '../../selectors/columnSelectors';
@@ -15,6 +15,14 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
   const dispatch = useDispatch();
   const columns = useSelector(state => selectColumnsByProject(state, projectId));
   const allTasks = useSelector(selectAllTasks);
+  
+  // Memoize tasks grouped by column for performance optimization
+  const tasksByColumn = useMemo(() => {
+    return columns.reduce((acc, column) => {
+      acc[column.id] = allTasks.filter(task => task.columnId === column.id);
+      return acc;
+    }, {});
+  }, [columns, allTasks]);
   
   // Task modal state
   const [selectedTask, setSelectedTask] = useState(null);
@@ -184,8 +192,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
               {...provided.droppableProps}
             >
               {columns.map((column, columnIndex) => {
-                const tasks = allTasks
-                  .filter(task => task.columnId === column.id)
+                const tasks = (tasksByColumn[column.id] || [])
                   .sort((a, b) => a.order - b.order);
                 
                 return (

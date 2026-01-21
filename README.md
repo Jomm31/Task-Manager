@@ -1,5 +1,7 @@
 # Task Manager
 
+Live Demo: https://jomm31.github.io/Task-Manager/
+
 A React-based task management application with Redux state management and Tailwind CSS styling.
 
 ## Prerequisites
