@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
   const [hovered, setHovered] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [calendarDate, setCalendarDate] = useState(new Date());
+  const [calendarPosition, setCalendarPosition] = useState({ top: 0, left: 0 });
+  const calendarButtonRef = useRef(null);
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
   
   const formatDate = (dateStr) => {
@@ -15,6 +18,16 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
   const handleDateClick = (e) => {
     e.stopPropagation();
     setCalendarDate(task.dueDate ? new Date(task.dueDate) : new Date());
+    
+    // Calculate position for the calendar popup
+    if (calendarButtonRef.current) {
+      const rect = calendarButtonRef.current.getBoundingClientRect();
+      setCalendarPosition({
+        top: rect.bottom + 4,
+        left: Math.min(rect.right - 200, window.innerWidth - 220)
+      });
+    }
+    
     setShowDatePicker(!showDatePicker);
   };
 
@@ -74,7 +87,7 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
     }
 
     return (
-      <div className={`absolute top-full right-0  z-30 p-2 rounded-lg shadow-lg ${darkMode ? 'bg-raisin border border-ceil/30' : 'bg-white border border-lavender'}`} onClick={e => e.stopPropagation()}>
+      <div className={`p-2 rounded-lg shadow-lg ${darkMode ? 'bg-raisin border border-ceil/30' : 'bg-white border border-lavender'}`} onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
           <button onClick={goToPrevMonth} className={`w-6 h-6 flex items-center justify-center rounded ${darkMode ? 'hover:bg-ceil/30 text-lavender' : 'hover:bg-lavender text-raisin'}`}>◀</button>
@@ -129,6 +142,7 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
       {/* Calendar icon on hover */}
       {hovered && !task.dueDate && (
         <button
+          ref={calendarButtonRef}
           className={`absolute top-2 right-2 p-1 rounded transition-colors ${darkMode ? 'hover:bg-ceil/30 text-silver' : 'hover:bg-lavender text-silver'}`}
           onClick={handleDateClick}
           title="Set due date"
@@ -139,8 +153,16 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
         </button>
       )}
 
-      {/* Date picker popup */}
-      {showDatePicker && renderCalendar()}
+      {/* Date picker popup - rendered via portal */}
+      {showDatePicker && createPortal(
+        <div 
+          className="fixed z-50"
+          style={{ top: calendarPosition.top, left: calendarPosition.left }}
+        >
+          {renderCalendar()}
+        </div>,
+        document.body
+      )}
     </div>
   );
 }
