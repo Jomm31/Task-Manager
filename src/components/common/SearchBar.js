@@ -97,7 +97,7 @@ function SearchBar({ projects, tasks, onSelectProject, onSelectTask, darkMode })
           className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 pl-8 sm:pl-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ceil transition-all ${
             darkMode 
               ? 'bg-raisin text-lavender placeholder-silver border-ceil/30' 
-              : 'bg-lavender/50 text-raisin placeholder-silver border-lavender'
+              : 'bg-mist text-raisin placeholder-dusk border-lavender'
           } border`}
         />
         <span className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-silver text-sm">

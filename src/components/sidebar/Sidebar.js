@@ -17,10 +17,10 @@ function Sidebar({ projects, selectedProjectId, onSelectProject, onShowProjectMo
   };
 
   return (
-    <div className={`h-full w-64 ${darkMode ? 'bg-raisin' : 'bg-raisin'} text-lavender p-4 flex flex-col border-r border-ceil/30`}>
+    <div className={`h-full w-64 ${darkMode ? 'bg-raisin text-lavender' : 'bg-mist text-raisin'} p-4 flex flex-col border-r border-ceil/30 transition-colors duration-300`}>
       <div className="flex items-center mb-3">
         <h2 className="text-lg font-bold flex-1">
-          Projects <span className="text-xs text-silver">({projects.length})</span>
+          Projects <span className={`text-xs ${darkMode ? 'text-silver' : 'text-dusk/60'}`}>({projects.length})</span>
         </h2>
         <button
           className="text-raisin bg-ceil hover:bg-ceil/80 rounded-full w-7 h-7 flex items-center justify-center transition-colors"

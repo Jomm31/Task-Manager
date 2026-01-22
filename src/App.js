@@ -15,7 +15,8 @@ function App() {
   const projects = useSelector(state => state.projects);
   const allTasks = useSelector(selectAllTasks);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Initialize sidebar based on screen width
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [currentView, setCurrentView] = useState('board'); // 'board' or 'calendar'
@@ -197,7 +198,7 @@ function App() {
         </aside>
 
         {/* Main Content */}
-        <main className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : ''} ${darkMode ? 'bg-raisin' : 'bg-lavender'} p-4 md:p-6`}>
+        <main className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : ''} ${darkMode ? 'bg-midnight' : 'bg-mist'} p-4 md:p-6`}>
           {currentView === 'calendar' ? (
             <CalendarView
               tasks={allTasks}

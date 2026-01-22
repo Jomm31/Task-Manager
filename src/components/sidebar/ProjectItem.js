@@ -43,7 +43,9 @@ function ProjectItem({ project, isSelected, onSelect, onUpdate, onDelete, darkMo
             ? 'bg-ceil text-raisin shadow-xl ring-2 ring-pastel scale-105 opacity-90'
             : isSelected 
               ? 'bg-ceil text-raisin' 
-              : 'bg-raisin/50 hover:bg-ceil/30 text-lavender'
+              : darkMode 
+                ? 'bg-raisin/50 hover:bg-ceil/30 text-lavender'
+                : 'bg-transparent hover:bg-ceil/20 text-raisin'
         }`}
         onClick={!editing ? onSelect : undefined}
         onMouseEnter={() => setHovered(true)}
@@ -52,7 +54,9 @@ function ProjectItem({ project, isSelected, onSelect, onUpdate, onDelete, darkMo
         {editing ? (
           <div className="flex-1 flex items-center gap-1">
             <input
-              className="w-[150px] px-2 py-1 rounded text-sm focus:outline-none focus:ring-2 focus:ring-ceil bg-raisin text-lavender border border-ceil/50"
+              className={`w-[150px] px-2 py-1 rounded text-sm focus:outline-none focus:ring-2 focus:ring-ceil border ${
+                darkMode ? 'bg-raisin text-lavender border-ceil/50' : 'bg-white text-raisin border-lavender'
+              }`}
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') handleCancel(); }}
@@ -86,7 +90,9 @@ function ProjectItem({ project, isSelected, onSelect, onUpdate, onDelete, darkMo
           <span className="flex gap-1 ml-2">
             <button
               title="Edit"
-              className="cursor-pointer text-lavender hover:text-white p-1 rounded hover:bg-ceil/30 transition-colors"
+              className={`cursor-pointer p-1 rounded hover:bg-ceil/30 transition-colors ${
+                isSelected ? 'text-raisin hover:text-white' : darkMode ? 'text-lavender hover:text-white' : 'text-silver hover:text-raisin'
+              }`}
               onClick={handleEditClick}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 32 32" fill="currentColor">

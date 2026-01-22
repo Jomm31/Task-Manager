@@ -110,18 +110,18 @@ function TaskCard({ task, onClick, onSetDueDate, darkMode, isDragging }) {
 
   return (
     <div
-      className={`p-3 rounded-lg shadow mb-2 cursor-pointer transition-all relative ${
+      className={`p-3 rounded-lg shadow mb-2 cursor-pointer transition-all duration-200 relative ${
         isDragging
-          ? 'shadow-xl ring-2 ring-ceil rotate-2'
-          : 'hover:shadow-md'
+          ? 'shadow-2xl ring-2 ring-ceil rotate-2 scale-105 z-10'
+          : 'hover:shadow-lg hover:-translate-y-1'
       } ${
-        darkMode ? 'bg-dusk hover:bg-dusk/80 border border-ceil/20' : 'bg-white'
+        darkMode ? 'bg-dusk hover:bg-dusk/80 border border-ceil/20' : 'bg-white hover:bg-white/90 border border-transparent hover:border-ceil/20'
       }`}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setShowDatePicker(false); }}
     >
-      <h4 className={`font-medium break-words overflow-hidden ${darkMode ? 'text-lavender' : 'text-raisin'}`} style={{ wordBreak: 'break-word' }}>
+      <h4 className={`font-medium break-words overflow-hidden transition-colors ${darkMode ? 'text-lavender' : 'text-raisin'}`} style={{ wordBreak: 'break-word' }}>
         {task.title}
       </h4>
       

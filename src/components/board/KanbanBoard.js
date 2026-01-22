@@ -235,7 +235,7 @@ function KanbanBoard({ projectId, darkMode, sidebarOpen }) {
         <div 
           ref={scrollbarRef}
           onScroll={handleScrollbarScroll}
-          className={`fixed bottom-0 right-0 overflow-x-auto z-40 transition-all duration-300 hidden sm:block ${darkMode ? 'scrollbar-dark bg-raisin' : 'scrollbar-light bg-lavender'}`}
+          className={`fixed bottom-0 right-0 overflow-x-auto z-40 transition-all duration-300 hidden sm:block ${darkMode ? 'scrollbar-dark bg-midnight' : 'scrollbar-light bg-mist'}`}
           style={{ left: sidebarOpen ? '256px' : '0', paddingLeft: '1.5rem', paddingRight: '1.5rem' }}
         >
           <div style={{ width: `${columns.length * 296 + 200}px`, height: '1px' }}></div>
