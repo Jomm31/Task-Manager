@@ -58,7 +58,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
     // Empty cells for days before the first day of month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(
-        <div key={`empty-${i}`} className={`p-1 sm:p-2 min-h-[60px] sm:min-h-[100px] ${darkMode ? 'bg-raisin/50' : 'bg-lavender/30'}`}></div>
+        <div key={`empty-${i}`} className={`p-2 min-h-[100px] ${darkMode ? 'bg-raisin/50' : 'bg-lavender/30'}`}></div>
       );
     }
     
@@ -71,23 +71,23 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
       days.push(
         <div 
           key={day} 
-          className={`p-1 sm:p-2 min-h-[60px] sm:min-h-[100px] border ${
+          className={`p-2 min-h-[100px] border ${
             darkMode ? 'border-ceil/30 bg-raisin/80' : 'border-lavender bg-white'
           } ${isToday(day) ? 'ring-2 ring-ceil' : ''}`}
         >
-          <div className={`text-xs sm:text-sm font-medium mb-1 ${
+          <div className={`text-sm font-medium mb-1 ${
             isToday(day) 
               ? 'text-ceil' 
               : darkMode ? 'text-lavender' : 'text-raisin'
           }`}>
             {day}
           </div>
-          <div className="space-y-1 overflow-y-auto max-h-[40px] sm:max-h-[80px]">
+          <div className="space-y-1 overflow-y-auto max-h-[80px] scrollbar-thin scrollbar-thumb-ceil/20 scrollbar-track-transparent">
             {dayTasks.map(task => (
               <div
                 key={task.id}
                 onClick={() => onTaskClick(task)}
-                className={`text-[10px] sm:text-xs p-0.5 sm:p-1 rounded cursor-pointer truncate transition-colors ${
+                className={`text-xs p-1 rounded cursor-pointer truncate transition-colors ${
                   isPastDue && !task.completed
                     ? 'bg-rose/30 text-rose hover:bg-rose/50'
                     : darkMode 
@@ -110,7 +110,7 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
   return (
     <div className={`h-full flex flex-col ${darkMode ? 'text-lavender' : 'text-raisin'}`}>
       {/* Calendar Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 shrink-0">
         <div className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={goToPreviousMonth}
@@ -140,29 +140,34 @@ function CalendarView({ tasks, projects, onTaskClick, darkMode }) {
         </button>
       </div>
       
-      {/* Day Headers */}
-      <div className="grid grid-cols-7 gap-px mb-px">
-        {dayNames.map((day, idx) => (
-          <div 
-            key={day} 
-            className={`p-1 sm:p-2 text-center text-xs sm:text-sm font-medium ${
-              darkMode ? 'bg-ceil/20 text-lavender' : 'bg-lavender text-raisin'
-            }`}
-          >
-            <span className="hidden sm:inline">{day}</span>
-            <span className="sm:hidden">{dayNamesShort[idx]}</span>
+      {/* Scrollable Calendar Container */}
+      <div className="flex-1 overflow-auto rounded-lg shadow-inner bg-black/5 relative">
+        <div className="min-w-[800px] h-full flex flex-col">
+          {/* Day Headers */}
+          <div className="grid grid-cols-7 gap-px mb-px shrink-0 sticky top-0 z-10 shadow-sm">
+            {dayNames.map((day, idx) => (
+              <div 
+                key={day} 
+                className={`p-2 text-center text-sm font-medium ${
+                  darkMode ? 'bg-ceil/20 text-lavender' : 'bg-lavender text-raisin'
+                }`}
+              >
+                {day}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-px flex-1 overflow-auto">
-        {renderCalendarDays()}
+          
+          {/* Calendar Grid */}
+          <div className="grid grid-cols-7 gap-px flex-1 auto-rows-fr">
+            {renderCalendarDays()}
+          </div>
+        </div>
       </div>
       
       {/* Legend */}
-      <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-silver">
+      <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-silver shrink-0">
         <div className="flex items-center gap-1 sm:gap-2">
+
           <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded ${darkMode ? 'bg-ceil/30' : 'bg-ceil/20'}`}></div>
           <span>Upcoming</span>
         </div>
